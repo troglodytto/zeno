@@ -2,6 +2,7 @@
 name = "zeno"
 version = "0.1.0"
 edition = "2021"
+author = "Ephemeral Astronaut <troglodytto@gmail.com>"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -28,6 +29,7 @@ features = ["spin_no_std"]
 
 
 [package.metadata.bootimage]
+run-command = ["qemu-system-x86_64", "-drive", "format=raw,file={}", "-vga", "virtio"]
 test-args = [
     "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio",
     "-display", "none"

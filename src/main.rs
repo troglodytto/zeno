@@ -11,6 +11,13 @@ use zeno::println;
 pub extern "C" fn _start() -> ! {
     zeno::init();
 
+    let ptr = 0xdeadbeaf as *mut u32;
+    unsafe {
+        *ptr = 42;
+    }
+
+    println!("Hello, world!");
+
     #[cfg(test)]
     test_main();
 
