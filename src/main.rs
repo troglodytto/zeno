@@ -11,12 +11,10 @@ use zeno::println;
 pub extern "C" fn _start() -> ! {
     zeno::init();
 
-    println!("Hello, world!");
-
     #[cfg(test)]
     test_main();
 
-    loop {}
+    zeno::hlt_loop();
 }
 
 /// This function is called on panic.
@@ -24,7 +22,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    zeno::hlt_loop();
 }
 
 #[cfg(test)]
