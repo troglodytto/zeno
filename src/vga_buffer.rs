@@ -1,7 +1,8 @@
-use core::fmt;
+use core::fmt::{Arguments, Result, Write};
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
+use x86_64::instructions::interrupts;
 
 /// The standard color palette in VGA text mode.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -143,8 +144,8 @@ impl Writer {
     }
 }
 
-impl fmt::Write for Writer {
-    fn write_str(&mut self, s: &str) -> fmt::Result {
+impl Write for Writer {
+    fn write_str(&mut self, s: &str) -> Result {
         self.write_string(s);
         Ok(())
     }
@@ -163,10 +164,7 @@ lazy_static! {
 
 /// Prints the given formatted string to the VGA text buffer through the global `WRITER` instance.
 #[doc(hidden)]
-pub fn _print(args: fmt::Arguments) {
-    use core::fmt::Write;
-    use x86_64::instructions::interrupts;
-
+pub fn _print(args: Arguments) {
     interrupts::without_interrupts(|| {
         WRITER.lock().write_fmt(args).unwrap();
     });
@@ -174,8 +172,6 @@ pub fn _print(args: fmt::Arguments) {
 
 #[doc(hidden)]
 pub fn _clear() {
-    use x86_64::instructions::interrupts;
-
     interrupts::without_interrupts(|| {
         WRITER.lock().clear_screen();
     });
