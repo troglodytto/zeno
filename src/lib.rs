@@ -1,15 +1,18 @@
 #![no_std]
 #![cfg_attr(test, no_main)]
 #![feature(custom_test_frameworks)]
+#![feature(abi_x86_interrupt)]
+#![feature(alloc_error_handler)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
-#![feature(abi_x86_interrupt)]
 
 #[cfg(test)]
 use bootloader::{entry_point, BootInfo};
-use core::panic::PanicInfo;
+use core::{alloc::Layout, panic::PanicInfo};
 use x86_64::instructions::port::Port;
+extern crate alloc;
 
+pub mod allocator;
 pub mod gdt;
 pub mod interrupts;
 pub mod memory;
@@ -41,6 +44,11 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
         let mut port = Port::new(0xf4);
         port.write(exit_code as u32);
     }
+}
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: Layout) -> ! {
+    panic!("Allocation error: {:?}", layout);
 }
 
 pub trait Testable {

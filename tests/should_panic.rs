@@ -1,11 +1,13 @@
 #![no_std]
 #![no_main]
 
+use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 use zeno::{exit_qemu, serial_print, serial_println, QemuExitCode};
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
+entry_point!(main);
+
+pub fn main(boot_info: &BootInfo) -> ! {
     should_fail();
     serial_println!("[test did not panic]");
     exit_qemu(QemuExitCode::Failed);

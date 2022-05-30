@@ -4,11 +4,13 @@
 #![test_runner(zeno::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 use zeno::println;
 
-#[no_mangle] // don't mangle the name of this function
-pub extern "C" fn _start() -> ! {
+entry_point!(main);
+
+pub fn main(boot_info: &BootInfo) -> ! {
     test_main();
 
     loop {}
