@@ -142,6 +142,14 @@ impl Writer {
             self.clear_row(row);
         }
     }
+
+    pub fn backspace(&mut self) {
+        self.column_position -= 1;
+        self.buffer.chars[BUFFER_HEIGHT - 1][self.column_position].write(ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code,
+        })
+    }
 }
 
 impl Write for Writer {
@@ -177,6 +185,13 @@ pub fn _clear() {
     });
 }
 
+#[doc(hidden)]
+pub fn _backspace() {
+    interrupts::without_interrupts(|| {
+        WRITER.lock().backspace();
+    })
+}
+
 /// Like the `print!` macro in the standard library, but prints to the VGA text buffer.
 #[macro_export]
 macro_rules! print {
@@ -188,6 +203,13 @@ macro_rules! print {
 macro_rules! println {
     () => ($crate::print!("\n"));
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! backspace {
+    () => {
+        $crate::vga_buffer::_backspace()
+    };
 }
 
 #[test_case]
