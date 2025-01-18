@@ -4,9 +4,8 @@ use x86_64::{
         segmentation::{Segment, CS},
         tables::load_tss,
     },
-    registers::segmentation::SegmentSelector,
     structures::{
-        gdt::{Descriptor, GlobalDescriptorTable},
+        gdt::{Descriptor, GlobalDescriptorTable, SegmentSelector},
         tss::TaskStateSegment,
     },
     VirtAddr,
@@ -39,7 +38,7 @@ lazy_static! {
             const STACK_SIZE: usize = 4096 * 5;
             static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
 
-            let stack_start = VirtAddr::from_ptr(unsafe { &STACK });
+            let stack_start = VirtAddr::from_ptr(&raw const STACK);
             let stack_end = stack_start + STACK_SIZE;
             stack_end
         };
