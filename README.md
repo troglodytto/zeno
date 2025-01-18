@@ -13,6 +13,8 @@ Implement Async CPU operations
 - Timer Interrupt Handlers using PICS
 - Key-press Interrupt handlers
 
+Implement Async Task Execution for Pre-Emptive concurrency
+- Poll based task executor
 
 Implement I/O
 - VGA graphics with a 16-bit color range
