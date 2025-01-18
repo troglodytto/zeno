@@ -2,7 +2,7 @@
 name = "zeno"
 version = "0.1.0"
 edition = "2021"
-author = "Ephemeral Astronaut <troglodytto@gmail.com>"
+authors = ["Ephemeral Astronaut <troglodytto@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,24 +15,40 @@ name = "stack_overflow"
 harness = false
 
 [dependencies]
-bootloader = { version = "0.9.22", features = ["map_physical_memory"]}
+bootloader = { version = "0.9", features = ["map_physical_memory"] }
 volatile = "0.2.6"
 spin = "0.5.2"
 x86_64 = "0.14.2"
 uart_16550 = "0.2.0"
 pic8259 = "0.10.1"
-pc-keyboard = "0.5.0"
+pc-keyboard = "0.7.0"
 linked_list_allocator = "0.9.0"
 
 [dependencies.lazy_static]
 version = "1.0"
 features = ["spin_no_std"]
 
+[dependencies.crossbeam-queue]
+version = "0.3.11"
+default-features = false
+features = ["alloc"]
+
+[dependencies.conquer-once]
+version = "0.2.0"
+default-features = false
+
+[dependencies.futures-util]
+version = "0.3.4"
+default-features = false
+features = ["alloc"]
 
 [package.metadata.bootimage]
-run-command = ["qemu-system-x86_64", "-drive", "format=raw,file={}", "-vga", "virtio"]
 test-args = [
-    "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio",
-    "-display", "none"
+    "-device",
+    "isa-debug-exit,iobase=0xf4,iosize=0x04",
+    "-serial",
+    "stdio",
+    "-display",
+    "none",
 ]
-test-success-exit-code = 33         # (0x10 << 1) | 1
+test-success-exit-code = 33 # (0x10 << 1) | 1
